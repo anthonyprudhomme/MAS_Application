@@ -18,5 +18,13 @@ export class MyApp {
       splashScreen.hide();
     });
   }
+  menuItems = [
+    'Profile',
+    'Settings'
+  ];
+
+  itemSelected(item: string) {
+    console.log("Selected Item", item);
+  }
 }
 

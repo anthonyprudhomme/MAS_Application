@@ -1,14 +1,31 @@
 <ion-header>
   <ion-navbar>
+    <button ion-button icon-only menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+
     <ion-title>
-      Ionic Blank
+      Every Event
     </ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+<ion-content>
+  <h4 class="paddingLeft">Suggested events</h4>
+  <ion-list>
+    <ion-item *ngFor="let item of items" class="smallPaddingLeft" (click)="itemSelected(item)">
+      
+      <h2>{{ item }}</h2>
+
+    </ion-item>
+  </ion-list>
+  <button ion-button full [navPush]="schedulePage">Find your event</button>
+
+  <ion-card>
+    <ion-card-title class="paddingLeft">
+      Event of the week
+    </ion-card-title>
+    <img src="../assets/img/Event_mockup.jpg" [navPush]="eventPage" />
+  </ion-card>
+
 </ion-content>
