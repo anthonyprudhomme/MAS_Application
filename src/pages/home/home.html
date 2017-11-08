@@ -1,31 +1,43 @@
 <ion-header>
   <ion-navbar>
-    <button ion-button icon-only menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
 
     <ion-title>
       Every Event
     </ion-title>
+
+    <ion-buttons end>
+      <button ion-button (click)="goToProfilePage()">
+        <ion-icon name="contact"></ion-icon>
+      </button>
+    </ion-buttons>
+    
   </ion-navbar>
 </ion-header>
 
 <ion-content>
+
   <h4 class="paddingLeft">Suggested events</h4>
   <ion-list>
-    <ion-item *ngFor="let item of items" class="smallPaddingLeft" (click)="itemSelected(item)">
-      
-      <h2>{{ item }}</h2>
-
+    <ion-item *ngFor="let event of events" class="smallPaddingLeft" (click)="eventSelected(event)">
+      <ion-thumbnail item-start>
+        <img src="{{event.event.picture_url}}">
+      </ion-thumbnail>
+      <h2 item-top>{{ event.event.name }}</h2>
+      <p>{{ event.event.start }}</p>
+      <p>{{ event.event.price }}€</p>
     </ion-item>
   </ion-list>
+
   <button ion-button full [navPush]="schedulePage">Find your event</button>
 
-  <ion-card>
-    <ion-card-title class="paddingLeft">
-      Event of the week
-    </ion-card-title>
-    <img src="../assets/img/Event_mockup.jpg" [navPush]="eventPage" />
-  </ion-card>
+  <div *ngIf="events[0] != undefined">
+    <ion-card>
+      <ion-card-title class="paddingLeft">
+        Event of the week
+      </ion-card-title>
+      <img src="{{events[0].event.picture_url}}" (click)="eventSelected(events[0])" />
+    </ion-card>
+  </div>
+  <div #map id="map" style="height:80%"></div>
 
 </ion-content>

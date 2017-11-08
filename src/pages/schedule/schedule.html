@@ -14,20 +14,51 @@
 
 
 <ion-content>
+  <div *ngIf="!showFilters">
+    <button ion-button style="width:48%" showWhen="android">
+      <div id="startDate" (click)="datePickerClicked()"> {{startDate}} </div>
+    </button>
+    <button ion-button style="width:48%" showWhen="ios">
+      <ion-datetime displayFormat="DDD MMM DD YYYY" [(ngModel)]="startDate"></ion-datetime>
+    </button>
+    <button ion-button style="width:48%">
+      <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="startHour"> </ion-datetime>
+    </button>
+    <button ion-button full (click)="showCheckbox()">Type of event</button>
+    <div id="badges">
+    </div>
 
-  <div id="test" (click)="datePickerClicked()"> Start Date </div>
-
-  <ion-item>
-    <ion-range min="0" max="200" [(ngModel)]="saturation" color="secondary" item-start>
+    <ion-range min="0" max="80" [(ngModel)]="price" color="primary">
+      <ion-label range-left class="small-text" style="width:40%">Price: {{ price }}€ </ion-label>
     </ion-range>
-    <ion-badge item-end>{{ saturation }}</ion-badge>
-  </ion-item>
+    <ion-range min="0" max="200" [(ngModel)]="distance" color="primary">
+      <ion-label range-left class="small-text" style="width:40%">Distance: {{ distance/10 }}km </ion-label>
+    </ion-range>
+    <ion-range min="0" max="16" [(ngModel)]="duration" color="primary">
+      <ion-label range-left class="small-text" style="width:40%">Duration: {{ duration/4 }} h </ion-label>
+    </ion-range>
+
+    <button ion-button full (click)="search()">Search</button>
+
+  </div>
+
+  <button id="showFilterElement" ion-button full (click)="showingFilters()">Hide filters</button>
+
+  <button ion-button (click)="sortByPrice()">Price</button>
+  <button ion-button (click)="sortByDistance()">Distance</button>
+  <button ion-button (click)="sortByDuration()">Duration</button>
+  <!-- <button ion-button (click)="sortByScore()">Suggested</button> -->
+
 
   <ion-list>
-    <ion-item *ngFor="let item of items" class="smallPaddingLeft" (click)="itemSelected(item)">
-
-      <h2>{{ item }}</h2>
-
+    <ion-item *ngFor="let event of events" class="smallPaddingLeft" (click)="eventSelected(event)">
+      <ion-thumbnail item-start>
+        <img src="{{event.event.picture_url}}">
+      </ion-thumbnail>
+      <h2 item-top>{{ event.event.name }}</h2>
+      <p>{{ event.event.start }}</p>
+      <p>{{ event.event.price }}</p>
     </ion-item>
   </ion-list>
+
 </ion-content>

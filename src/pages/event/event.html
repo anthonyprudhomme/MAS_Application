@@ -1,24 +1,62 @@
-<!--
-  Generated template for the EventPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>EventPage</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>{{event.event.name}}</ion-title>
+    </ion-navbar>
 
 </ion-header>
 
 
-<ion-content >
-    <ion-list>
-        <ion-item *ngFor="let item of items" class="smallPaddingLeft" (click)="itemSelected(item)">
-    
-          <h2>{{ item }}</h2>
-    
-        </ion-item>
-      </ion-list>
+<ion-content padding>
+    <h1>{{event.event.name}}</h1>
+
+    <img src="{{event.event.picture_url}}" />
+
+    <button ion-button block icon-left color="light" (click)="goToVenuePage()">
+        <ion-icon name="contacts"></ion-icon>
+        {{event.event.venue.name}}
+    </button>
+
+    <button ion-button small clear icon-left color="dark">
+        <ion-icon name="calendar"></ion-icon>
+        {{event.event.modifiedStart}}
+    </button>
+
+    <button ion-button small clear icon-left color="dark">
+        <ion-icon name="time"></ion-icon>
+        {{event.event.stringDuration}}
+    </button>
+
+    <button ion-button small color="light" (click)="likeEvent()">
+        <ion-icon name="{{liked}}"></ion-icon>
+    </button>
+
+    <button ion-button small icon-left color="light">
+        <ion-icon name="navigate"></ion-icon>
+        Maps
+    </button>
+
+    <button ion-button small icon-left color="light">
+        <ion-icon name="pricetags"></ion-icon>
+        {{event.event.price}}€
+    </button>
+
+    <p>
+        {{event.event.description}}
+    </p>
+
+    <p>
+        Adresse : {{event.event.address}}
+    </p>
+
+    <button ion-button small clear icon-left color="dark">
+        <ion-icon name="people"></ion-icon>
+        Friends who are going
+    </button>
+
+    <p>
+        <img width="50" height="50" src="assets/img/Emmanuel.jpg" />
+        <img width="50" height="50" src="assets/img/Brigitte.jpg" />
+    </p>
+
 </ion-content>

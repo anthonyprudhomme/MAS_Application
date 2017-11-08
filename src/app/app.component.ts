@@ -4,6 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
+import { ProfilePage } from '../pages/profile/profile';
 @Component({
   templateUrl: 'app.html'
 })
@@ -24,7 +25,7 @@ export class MyApp {
   ];
 
   itemSelected(item: string) {
-    console.log("Selected Item", item);
+      //this.navCtrl.push(ProfilePage);
   }
 }
 

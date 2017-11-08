@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Profile
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+
+    <ion-range min="0" max="150" [(ngModel)]="age" color="primary">
+      <ion-label id="age" range-left class="small-text" style="width:40%">Age: {{ age }} </ion-label>
+    </ion-range>
+
+    <button ion-button full (click)="showCheckbox()">Favorite type of event</button>
+    <div id="badges">
+    </div>
+
+    <button ion-button full (click)="saveProfile()">Save</button>
+
+  </ion-list>
+</ion-content>
