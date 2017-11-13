@@ -19,5 +19,16 @@
 
     <button ion-button full (click)="saveProfile()">Save</button>
 
+    <ion-footer>
+      <div *ngIf="!venueCodeEntered">
+        <ion-input type="password" [(ngModel)]="venueCode" placeholder="Venue code"></ion-input>
+        <button item-end ion-button full (click)="checkVenueCode()">Ok</button>
+      </div>
+      <div *ngIf="venueCodeEntered">
+        <button ion-button full (click)="goToChartPage()">See your statistics</button>
+      </div>
+    </ion-footer>
+
+
   </ion-list>
 </ion-content>

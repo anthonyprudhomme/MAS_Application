@@ -32,7 +32,7 @@ export class HomePage {
 
   map: GoogleMap;
   mapElement: HTMLElement;
-  userPosition = { lat: 0, lon: 0 };
+  public static userPosition = { lat: 0, lon: 0 };
   userId = null;
   database: SQLiteObject;
 
@@ -116,17 +116,17 @@ export class HomePage {
         });
 
       this.geolocation.getCurrentPosition().then((resp) => {
-        this.userPosition.lat = resp.coords.latitude;
-        this.userPosition.lon = resp.coords.longitude;
+        HomePage.userPosition.lat = resp.coords.latitude;
+        HomePage.userPosition.lon = resp.coords.longitude;
       }).catch((error) => {
         console.log('Error getting location', error.message);
       });
 
       let watch = this.geolocation.watchPosition();
       watch.subscribe((data) => {
-        this.userPosition.lat = data.coords.latitude;
-        this.userPosition.lon = data.coords.longitude;
-        if (this.isMapUpdateRequired && this.userPosition.lat != 0 && this.userPosition.lon != 0) {
+        HomePage.userPosition.lat = data.coords.latitude;
+        HomePage.userPosition.lon = data.coords.longitude;
+        if (this.isMapUpdateRequired && HomePage.userPosition.lat != 0 && HomePage.userPosition.lon != 0) {
           this.updateMapCameraPosition();
           this.isMapUpdateRequired = false;
         }
@@ -156,6 +156,12 @@ export class HomePage {
         if (currentEvent.event.price == null) {
           currentEvent.event.price = 0;
         }
+        var splittedDate = currentEvent.event.start.split('T');
+        splittedDate = splittedDate[0].split('-');
+        var date = new Date(splittedDate[0], splittedDate[1], splittedDate[2]);
+        var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        var dayName = days[date.getDay()];
+        currentEvent.event.modifiedStart = dayName + ", " + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
         this.events.push(currentEvent);
       }
     }
@@ -265,8 +271,8 @@ export class HomePage {
     let mapOptions: GoogleMapOptions = {
       camera: {
         target: {
-          lat: this.userPosition.lat,
-          lng: this.userPosition.lon
+          lat: HomePage.userPosition.lat,
+          lng: HomePage.userPosition.lon
         },
         zoom: 12,
         tilt: 30
@@ -278,8 +284,8 @@ export class HomePage {
       .then(() => {
         this.isMapLoaded = true;
         this.map.setCameraTarget({
-          lat: this.userPosition.lat,
-          lng: this.userPosition.lon
+          lat: HomePage.userPosition.lat,
+          lng: HomePage.userPosition.lon
         });
         this.createUserMarker();
       });
@@ -287,8 +293,8 @@ export class HomePage {
 
   updateMapCameraPosition() {
     this.map.setCameraTarget({
-      lat: this.userPosition.lat,
-      lng: this.userPosition.lon
+      lat: HomePage.userPosition.lat,
+      lng: HomePage.userPosition.lon
     });
     this.createUserMarker();
   }
@@ -303,8 +309,8 @@ export class HomePage {
           }
         },
         position: {
-          lat: this.userPosition.lat,
-          lng: this.userPosition.lon
+          lat: HomePage.userPosition.lat,
+          lng: HomePage.userPosition.lon
         }
       }).then(marker => {
         marker.on(GoogleMapsEvent.MARKER_CLICK)
@@ -371,7 +377,8 @@ export class HomePage {
     var params = {
       userId: id,
       eventId: this.selectedEvent,
-      userPosition: this.userPosition
+      userPosition_lat: HomePage.userPosition.lat,
+      userPosition_lon: HomePage.userPosition.lon
     }
     this.http.post('http://52.56.35.31:8088/clickedEvent', { params }, {})
       .then(data => {

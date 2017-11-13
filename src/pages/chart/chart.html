@@ -1,0 +1,53 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Statistics</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+  
+  <ion-card padding>
+    <h2>Age - General</h2>
+    <div style="display: block">
+      <canvas baseChart [data]="doughnutChartDataGeneral" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"></canvas>
+    </div>
+  </ion-card>
+
+  <ion-card padding>
+    <h2>Age - Architectomies</h2>
+    <div style="display: block">
+      <canvas baseChart [data]="doughnutChartData1" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"></canvas>
+    </div>
+  </ion-card>
+
+  <ion-card padding>
+    <h2>Age - Fuyuki Yamakawa</h2>
+    <div style="display: block">
+      <canvas baseChart [data]="doughnutChartData2" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"></canvas>
+    </div>
+  </ion-card>
+
+  <ion-card padding>
+    <h2>Age - Kazuyo Sejima & Yuko Hasegawa</h2>
+    <div style="display: block">
+      <canvas baseChart [data]="doughnutChartData3" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"></canvas>
+    </div>
+  </ion-card>
+
+  <ion-card padding>
+    <h2>Trending</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <div style="display: block;">
+          <canvas baseChart width="300" height="400" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
+            [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"></canvas>
+        </div>
+      </div>
+    </div>
+  </ion-card>
+
+
+
+</ion-content>

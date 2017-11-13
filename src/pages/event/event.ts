@@ -6,6 +6,7 @@ import { HTTP } from '@ionic-native/http';
 import { Storage } from '@ionic/storage';
 
 import { VenuePage } from '../venue/venue'
+import { HomePage } from '../home/home';
 
 /**
  * Generated class for the EventPage page.
@@ -63,7 +64,8 @@ export class EventPage {
     var params = {
       userId: id,
       eventId: this.event.event.facebook_id,
-      userPosition: null // TODO get user position
+      userPosition_lat: HomePage.userPosition.lat,
+      userPosition_lon: HomePage.userPosition.lon
     }
     this.http.post('http://52.56.35.31:8088/likedEvent', { params }, {})
       .then(data => {

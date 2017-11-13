@@ -49,16 +49,21 @@
   <button ion-button (click)="sortByDuration()">Duration</button>
   <!-- <button ion-button (click)="sortByScore()">Suggested</button> -->
 
-
   <ion-list>
-    <ion-item *ngFor="let event of events" class="smallPaddingLeft" (click)="eventSelected(event)">
-      <ion-thumbnail item-start>
-        <img src="{{event.event.picture_url}}">
-      </ion-thumbnail>
-      <h2 item-top>{{ event.event.name }}</h2>
-      <p>{{ event.event.start }}</p>
-      <p>{{ event.event.price }}</p>
-    </ion-item>
-  </ion-list>
+      <div *ngFor="let event of events">
+        <ion-card>
+          <ion-item class="smallPaddingLeft" (click)="eventSelected(event)">
+  
+            <ion-avatar item-start>
+              <img src="{{event.event.picture_url}}">
+            </ion-avatar>
+            <h2 item-top>{{ event.event.name }}</h2>
+            <p>{{ event.event.modifiedStart }}</p>
+            <p>{{ event.event.price }}€</p>
+  
+          </ion-item>
+        </ion-card>
+      </div>
+    </ion-list>
 
 </ion-content>

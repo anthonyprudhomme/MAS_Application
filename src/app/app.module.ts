@@ -10,6 +10,7 @@ import { HTTP } from '@ionic-native/http';
 import { SQLite } from '@ionic-native/sqlite';
 import { Geolocation } from '@ionic-native/geolocation';
 import { IonicStorageModule } from '@ionic/storage';
+import { ChartsModule } from 'ng2-charts';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -17,6 +18,7 @@ import { EventPage } from '../pages/event/event';
 import { SchedulePage } from '../pages/schedule/schedule';
 import { ProfilePage } from '../pages/profile/profile';
 import { VenuePage } from '../pages/venue/venue';
+import { ChartPage } from '../pages/chart/chart';
 
 @NgModule({
   declarations: [
@@ -25,12 +27,14 @@ import { VenuePage } from '../pages/venue/venue';
     EventPage,
     SchedulePage,
     ProfilePage,
-    VenuePage
+    VenuePage,
+    ChartPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    ChartsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -39,7 +43,8 @@ import { VenuePage } from '../pages/venue/venue';
     EventPage,
     SchedulePage,
     ProfilePage,
-    VenuePage
+    VenuePage,
+    ChartPage
   ],
   providers: [
     StatusBar,

@@ -6,6 +6,9 @@ import { AlertController } from 'ionic-angular';
 import { HTTP } from '@ionic-native/http';
 import { Storage } from '@ionic/storage';
 
+import { ChartPage } from '../chart/chart'
+import { HomePage } from '../home/home';
+
 /**
  * Generated class for the ProfilePage page.
  *
@@ -22,6 +25,8 @@ export class ProfilePage {
 
   age = 0;
   favoriteTypesOfEvent = null;
+  venueCodeEntered = false;
+  venueCode = "";
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -57,10 +62,16 @@ export class ProfilePage {
 
   sendProfile = (id: number): void => {
     if (this.age != 0) {
-      this.storage.set("age",this.age);
+      this.storage.set("age", this.age);
       if (this.favoriteTypesOfEvent != null) {
-        this.storage.set("favTypes",this.favoriteTypesOfEvent);
-        this.http.get('http://52.56.35.31:8088/postProfile', { "id": id, "age": this.age, "favEvents": this.favoriteTypesOfEvent }, {})
+        this.storage.set("favTypes", this.favoriteTypesOfEvent);
+        this.http.get('http://52.56.35.31:8088/postProfile', {
+          "id": id,
+          "age": this.age,
+          "favEvents": this.favoriteTypesOfEvent,
+          "userPosition_lat": HomePage.userPosition.lat,
+          "userPosition_lon": HomePage.userPosition.lon
+        }, {})
           .then(data => {
             this.presentToast("Profile sucessfully saved.");
           })
@@ -158,7 +169,7 @@ export class ProfilePage {
     this.http.get('http://52.56.35.31:8088/getNewId', {}, {})
       .then(data => {
         var newId = JSON.parse(data.data);
-        this.storage.set("id",newId);
+        this.storage.set("id", newId);
         functionToCall(newId);
       })
       .catch(error => {
@@ -170,12 +181,21 @@ export class ProfilePage {
 
   checkUserId(functionToCall) {
     this.storage.get("id").then(result => {
-      if(result != null){
+      if (result != null) {
         functionToCall(window.localStorage.getItem("id"));
-      }else{
+      } else {
         this.askForNewUserId(functionToCall);
       }
     });
+  }
+
+  checkVenueCode() {
+    // this.venueCode is the code entered
+    this.venueCodeEntered = true;
+  }
+
+  goToChartPage() {
+    this.navCtrl.push(ChartPage);
   }
 
 }

@@ -10,6 +10,7 @@ import { AlertController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
 import { EventPage } from '../event/event'
+import { HomePage } from '../home/home'
 
 @IonicPage()
 @Component({
@@ -105,7 +106,11 @@ export class SchedulePage {
       duration: this.duration / 4,
       startDate: this.startDate,
       startHour: this.startHour,
-      distance: this.distance / 10
+      distance: this.distance / 10,
+      typeOfEvent: null,
+      userPosition_lat: HomePage.userPosition.lat,
+      userPosition_lon: HomePage.userPosition.lon
+      // send null if that's opitionnal
     }
     console.log(params);
     this.http.get('http://52.56.35.31:8088/getData', { params }, {})
@@ -137,6 +142,12 @@ export class SchedulePage {
         if (currentEvent.event.distance == null) {
           currentEvent.event.distance = jsonData.events.length - i;
         }
+        var splittedDate = currentEvent.event.start.split('T');
+        splittedDate = splittedDate[0].split('-');
+        var date = new Date(splittedDate[0], splittedDate[1], splittedDate[2]);
+        var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        var dayName = days[date.getDay()];
+        currentEvent.event.modifiedStart = dayName + ", " + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
         this.events.push(currentEvent);
       }
     }
@@ -191,7 +202,8 @@ export class SchedulePage {
     var params = {
       userId: id,
       eventId: this.selectedEvent,
-      userPosition: null // TODO add current user position
+      userPosition_lat: HomePage.userPosition.lat,
+      userPosition_lon: HomePage.userPosition.lon
     }
     this.http.post('http://52.56.35.31:8088/clickedEvent', { params }, {})
       .then(data => {

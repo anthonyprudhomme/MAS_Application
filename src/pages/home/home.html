@@ -10,7 +10,7 @@
         <ion-icon name="contact"></ion-icon>
       </button>
     </ion-buttons>
-    
+
   </ion-navbar>
 </ion-header>
 
@@ -18,14 +18,20 @@
 
   <h4 class="paddingLeft">Suggested events</h4>
   <ion-list>
-    <ion-item *ngFor="let event of events" class="smallPaddingLeft" (click)="eventSelected(event)">
-      <ion-thumbnail item-start>
-        <img src="{{event.event.picture_url}}">
-      </ion-thumbnail>
-      <h2 item-top>{{ event.event.name }}</h2>
-      <p>{{ event.event.start }}</p>
-      <p>{{ event.event.price }}€</p>
-    </ion-item>
+    <div *ngFor="let event of events">
+      <ion-card>
+        <ion-item class="smallPaddingLeft" (click)="eventSelected(event)">
+
+          <ion-avatar item-start class="paddingLeft">
+            <img src="{{event.event.picture_url}}">
+          </ion-avatar>
+          <h2 item-top>{{ event.event.name }}</h2>
+          <p>{{ event.event.modifiedStart }}</p>
+          <p>{{ event.event.price }}€</p>
+
+        </ion-item>
+      </ion-card>
+    </div>
   </ion-list>
 
   <button ion-button full [navPush]="schedulePage">Find your event</button>
