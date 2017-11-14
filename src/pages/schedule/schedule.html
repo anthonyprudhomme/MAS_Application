@@ -15,6 +15,8 @@
 
 <ion-content>
   <div *ngIf="!showFilters">
+    <ion-searchbar [(ngModel)]="searchedName" [showCancelButton]="shouldShowCancel">
+    </ion-searchbar>
     <button ion-button style="width:48%" showWhen="android">
       <div id="startDate" (click)="datePickerClicked()"> {{startDate}} </div>
     </button>
@@ -50,20 +52,20 @@
   <!-- <button ion-button (click)="sortByScore()">Suggested</button> -->
 
   <ion-list>
-      <div *ngFor="let event of events">
-        <ion-card>
-          <ion-item class="smallPaddingLeft" (click)="eventSelected(event)">
-  
-            <ion-avatar item-start class="paddingLeft">
-              <img src="{{event.event.picture_url}}">
-            </ion-avatar>
-            <h2 item-top>{{ event.event.name }}</h2>
-            <p>{{ event.event.modifiedStart }}</p>
-            <p>{{ event.event.price }}€</p>
-  
-          </ion-item>
-        </ion-card>
-      </div>
-    </ion-list>
+    <div *ngFor="let event of events">
+      <ion-card>
+        <ion-item class="smallPaddingLeft" (click)="eventSelected(event)">
+
+          <ion-avatar item-start class="paddingLeft">
+            <img src="{{event.picture_url}}">
+          </ion-avatar>
+          <h2 item-top>{{ event.name }}</h2>
+          <p>{{ event.modifiedStart }}</p>
+          <p>{{ event.price }}€</p>
+
+        </ion-item>
+      </ion-card>
+    </div>
+  </ion-list>
 
 </ion-content>

@@ -20,11 +20,11 @@
             <ion-item class="smallPaddingLeft" (click)="eventSelected(event)">
   
               <ion-avatar item-start class="paddingLeft">
-                <img src="{{event.event.picture_url}}">
+                <img src="{{event.picture_url}}">
               </ion-avatar>
-              <h2 item-top>{{ event.event.name }}</h2>
-              <p>{{ event.event.modifiedStart }}</p>
-              <p>{{ event.event.price }}€</p>
+              <h2 item-top>{{ event.name }}</h2>
+              <p>{{ event.modifiedStart }}</p>
+              <p>{{ event.price }}€</p>
   
             </ion-item>
           </ion-card>

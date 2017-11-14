@@ -1,30 +1,30 @@
 <ion-header>
 
     <ion-navbar>
-        <ion-title>{{event.event.name}}</ion-title>
+        <ion-title>{{event.name}}</ion-title>
     </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-    <h1>{{event.event.name}}</h1>
+    <h1>{{event.name}}</h1>
 
-    <img src="{{event.event.picture_url}}" />
+    <img src="{{event.picture_url}}" />
 
     <button ion-button block icon-left color="light" (click)="goToVenuePage()">
         <ion-icon name="contacts"></ion-icon>
-        {{event.event.venue.name}}
+        {{event.venue_name}}
     </button>
 
     <button ion-button small clear icon-left color="dark">
         <ion-icon name="calendar"></ion-icon>
-        {{event.event.modifiedStart}}
+        {{event.modifiedStart}}
     </button>
 
     <button ion-button small clear icon-left color="dark">
         <ion-icon name="time"></ion-icon>
-        {{event.event.stringDuration}}
+        {{event.stringDuration}}
     </button>
 
     <button ion-button small color="light" (click)="likeEvent()">
@@ -38,16 +38,16 @@
 
     <button ion-button small icon-left color="light">
         <ion-icon name="pricetags"></ion-icon>
-        {{event.event.price}}€
+        {{event.price}}€
     </button>
 
     <p>
-        <!-- {{event.event.localizedDesc}} -->
-        {{event.event.description}}
+        <!-- {{event.localizedDesc}} -->
+        {{event.description}}
     </p>
 
     <p>
-        Adresse : {{event.event.address}}
+        Adresse : {{event.address}}
     </p>
 
     <button ion-button small clear icon-left color="dark">

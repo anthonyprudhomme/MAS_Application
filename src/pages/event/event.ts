@@ -30,20 +30,18 @@ export class EventPage {
     public navParams: NavParams,
     private toastCtrl: ToastController,
     private http: HTTP,
-    private storage: Storage,
-  ) {
+    private storage: Storage) {
 
     //translate.setDefaultLang('en');
-
     this.event = navParams.get('event');
-    var splittedDate = this.event.event.start.split('T');
+    var splittedDate = this.event.start.split('T');
     splittedDate = splittedDate[0].split('-');
     var date = new Date(splittedDate[0], splittedDate[1], splittedDate[2]);
     var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     var dayName = days[date.getDay()];
-    this.event.event.modifiedStart = dayName + ", " + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
-    this.event.event.stringDuration = this.getDurationString(this.event.event.duration);
-    this.storage.get(this.event.event.facebook_id).then(result => {
+    this.event.modifiedStart = dayName + ", " + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+    this.event.stringDuration = this.getDurationString(this.event);
+    this.storage.get(this.event.facebook_id).then(result => {
       if (result != null) {
         this.liked = result;
       } else {
@@ -68,18 +66,18 @@ export class EventPage {
     if (this.liked.indexOf("heart-outline") !== -1) {
       // if we are liking the event
       this.liked = "heart";
-      this.storage.set(this.event.event.facebook_id, "heart");
+      this.storage.set(this.event.facebook_id, "heart");
       this.checkUserId(this.sendPostWithId);
       this.likedEvents.push(this.event);
       this.storage.set("likedEvents", this.likedEvents);
     } else {
       // if we are disliking the event
       this.liked = "heart-outline";
-      this.storage.set(this.event.event.facebook_id, "heart-outline");
+      this.storage.set(this.event.facebook_id, "heart-outline");
       for (let i = 0; i < this.likedEvents.length; i++) {
         const event = this.likedEvents[i];
-        if(event.event.facebook_id.indexOf(this.event.event.facebook_id) != -1){
-          this.likedEvents.splice(i,1);
+        if (event.facebook_id.indexOf(this.event.facebook_id) != -1) {
+          this.likedEvents.splice(i, 1);
         }
       }
       this.storage.set("likedEvents", this.likedEvents);
@@ -89,7 +87,7 @@ export class EventPage {
   sendPostWithId(id) {
     var params = {
       userId: id,
-      eventId: this.event.event.facebook_id,
+      eventId: this.event.facebook_id,
       userPosition_lat: HomePage.userPosition.lat,
       userPosition_lon: HomePage.userPosition.lon
     }
@@ -114,23 +112,23 @@ export class EventPage {
 
   }
 
-  getDurationString(duration) {
-    if (duration[0] == 0) {
-      if (duration[1] == 0) {
-        if (duration[2] == 0) {
-          if (duration[3] == 0) {
-            return duration[4] + "min";
+  getDurationString(event) {
+    if (event.duration_year == 0) {
+      if (event.duration_month == 0) {
+        if (event.duration_day == 0) {
+          if (event.duration_hour == 0) {
+            return event.duration_minute + "min";
           } else {
-            return duration[3] + "h" + duration[4];
+            return event.duration_hour + "h" + event.duration_minute;
           }
         } else {
-          return duration[2] + " days";
+          return event.duration_day + " days";
         }
       } else {
-        return duration[1] + " months";
+        return event.duration_month + " months";
       }
     } else {
-      return duration[0] + " years and " + duration[1] + " months";
+      return event.duration_year + " years and " + event.duration_month + " months";
     }
   }
 

@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
+import { EventPage } from '../event/event'
+
 /**
  * Generated class for the LikedEventPage page.
  *
@@ -36,6 +38,10 @@ export class LikedEventPage {
         }
       });
     });
+  }
+
+  eventSelected(event) {
+    this.navCtrl.push(EventPage, { event: event });
   }
 
 }
