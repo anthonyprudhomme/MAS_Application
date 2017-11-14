@@ -11,6 +11,10 @@ import { SQLite } from '@ionic-native/sqlite';
 import { Geolocation } from '@ionic-native/geolocation';
 import { IonicStorageModule } from '@ionic/storage';
 import { ChartsModule } from 'ng2-charts';
+import { HttpModule, Http } from '@angular/http';
+import { TranslateModule } from 'ng2-translate/ng2-translate';
+import { TranslateLoader, TranslateStaticLoader } from 'ng2-translate/src/translate.service';
+import { Globalization } from '@ionic-native/globalization';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -19,6 +23,11 @@ import { SchedulePage } from '../pages/schedule/schedule';
 import { ProfilePage } from '../pages/profile/profile';
 import { VenuePage } from '../pages/venue/venue';
 import { ChartPage } from '../pages/chart/chart';
+import { LikedEventPage } from '../pages/liked-event/liked-event';
+
+export function createTranslateLoader(http: Http) {
+  return new TranslateStaticLoader(http, 'assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -28,13 +37,19 @@ import { ChartPage } from '../pages/chart/chart';
     SchedulePage,
     ProfilePage,
     VenuePage,
-    ChartPage
+    ChartPage,
+    LikedEventPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
-    ChartsModule
+    ChartsModule,
+    TranslateModule.forRoot({
+      provide: TranslateLoader,
+      useFactory: (createTranslateLoader),
+      deps: [Http]
+    })
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -44,7 +59,8 @@ import { ChartPage } from '../pages/chart/chart';
     SchedulePage,
     ProfilePage,
     VenuePage,
-    ChartPage
+    ChartPage,
+    LikedEventPage
   ],
   providers: [
     StatusBar,
@@ -53,8 +69,10 @@ import { ChartPage } from '../pages/chart/chart';
     GoogleMaps,
     HTTP,
     SQLite,
+    Globalization,
     Geolocation,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })
-export class AppModule {}
+export class AppModule {
+}

@@ -8,6 +8,8 @@ import { Storage } from '@ionic/storage';
 import { VenuePage } from '../venue/venue'
 import { HomePage } from '../home/home';
 
+//import { TranslateService } from '@ngx-translate/core';
+
 /**
  * Generated class for the EventPage page.
  *
@@ -23,11 +25,16 @@ import { HomePage } from '../home/home';
 export class EventPage {
   event;
   liked = "heart-outline";
+  likedEvents = null;
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private toastCtrl: ToastController,
     private http: HTTP,
-    private storage: Storage) {
+    private storage: Storage,
+  ) {
+
+    //translate.setDefaultLang('en');
+
     this.event = navParams.get('event');
     var splittedDate = this.event.event.start.split('T');
     splittedDate = splittedDate[0].split('-');
@@ -37,30 +44,49 @@ export class EventPage {
     this.event.event.modifiedStart = dayName + ", " + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
     this.event.event.stringDuration = this.getDurationString(this.event.event.duration);
     this.storage.get(this.event.event.facebook_id).then(result => {
-      if(result != null){
+      if (result != null) {
         this.liked = result;
-      }else{
+      } else {
         this.liked = "heart-outline";
       }
     });
+    this.storage.get("likedEvents").then(result => {
+      if (result != null) {
+        this.likedEvents = result;
+      } else {
+        this.likedEvents = [];
+      }
+    });
+    //this.event.event.localizedDesc = translate.getTranslation(this.event.event.description);
   }
 
   ionViewDidLoad() {
 
   }
 
-  likeEvent(){
-    if(this.liked.indexOf("heart-outline") !== -1){
+  likeEvent() {
+    if (this.liked.indexOf("heart-outline") !== -1) {
+      // if we are liking the event
       this.liked = "heart";
       this.storage.set(this.event.event.facebook_id, "heart");
       this.checkUserId(this.sendPostWithId);
-    }else{
+      this.likedEvents.push(this.event);
+      this.storage.set("likedEvents", this.likedEvents);
+    } else {
+      // if we are disliking the event
       this.liked = "heart-outline";
       this.storage.set(this.event.event.facebook_id, "heart-outline");
+      for (let i = 0; i < this.likedEvents.length; i++) {
+        const event = this.likedEvents[i];
+        if(event.event.facebook_id.indexOf(this.event.event.facebook_id) != -1){
+          this.likedEvents.splice(i,1);
+        }
+      }
+      this.storage.set("likedEvents", this.likedEvents);
     }
   }
 
-  sendPostWithId(id){
+  sendPostWithId(id) {
     var params = {
       userId: id,
       eventId: this.event.event.facebook_id,
@@ -76,7 +102,7 @@ export class EventPage {
   }
 
   goToVenuePage() {
-    this.http.get('http://52.56.35.31:8088/getVenue', {"id": this.event.event.venue.id}, {})
+    this.http.get('http://52.56.35.31:8088/getVenue', { "id": this.event.event.venue.id }, {})
       .then(data => {
         var jsonData = JSON.parse(data.data);
         this.navCtrl.push(VenuePage, { venue: jsonData });
@@ -85,7 +111,7 @@ export class EventPage {
         this.presentToast("No page for this venue yet.");
         //this.presentToast(JSON.stringify(error, null, 4));
       });
-    
+
   }
 
   getDurationString(duration) {
@@ -126,7 +152,7 @@ export class EventPage {
     this.http.get('http://52.56.35.31:8088/getNewId', {}, {})
       .then(data => {
         var newId = JSON.parse(data.data);
-        this.storage.set("id",newId);
+        this.storage.set("id", newId);
         functionToCall(newId);
       })
       .catch(error => {
@@ -136,9 +162,9 @@ export class EventPage {
 
   checkUserId(functionToCall) {
     this.storage.get("id").then(result => {
-      if(result != null){
+      if (result != null) {
         functionToCall(result);
-      }else{
+      } else {
         this.askForNewUserId(functionToCall);
       }
     });

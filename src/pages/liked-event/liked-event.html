@@ -1,0 +1,34 @@
+<!--
+  Generated template for the LikedEventPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Liked Event</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+    <ion-list>
+        <div *ngFor="let event of likedEvents">
+          <ion-card>
+            <ion-item class="smallPaddingLeft" (click)="eventSelected(event)">
+  
+              <ion-avatar item-start class="paddingLeft">
+                <img src="{{event.event.picture_url}}">
+              </ion-avatar>
+              <h2 item-top>{{ event.event.name }}</h2>
+              <p>{{ event.event.modifiedStart }}</p>
+              <p>{{ event.event.price }}€</p>
+  
+            </ion-item>
+          </ion-card>
+        </div>
+      </ion-list>
+
+</ion-content>

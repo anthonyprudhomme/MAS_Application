@@ -16,7 +16,7 @@
 
 <ion-content>
 
-  <h4 class="paddingLeft">Suggested events</h4>
+  <h4 class="paddingLeft">{{ 'SUG_EVENT' | translate }}</h4>
   <ion-list>
     <div *ngFor="let event of events">
       <ion-card>
@@ -34,6 +34,27 @@
     </div>
   </ion-list>
 
+  <div *ngIf="showLikedEvents">
+    <h4 class="paddingLeft">Liked events</h4>
+    <ion-list>
+        <ion-card>
+          <ion-item class="smallPaddingLeft" (click)="eventSelected(likedEvents[0])">
+
+            <ion-avatar item-start class="paddingLeft">
+              <img src="{{likedEvents[0].event.picture_url}}">
+            </ion-avatar>
+            <h2 item-top>{{ likedEvents[0].event.name }}</h2>
+            <p>{{ likedEvents[0].event.modifiedStart }}</p>
+            <p>{{ likedEvents[0].event.price }}€</p>
+
+          </ion-item>
+        </ion-card>
+    </ion-list>
+    <button ion-button full [navPush]="likedEventPage">See all your liked events</button>
+  </div>
+  <div *ngIf="!showLikedEvents">
+      <h4 class="paddingLeft">Like event to see them here.</h4>
+  </div>
   <button ion-button full [navPush]="schedulePage">Find your event</button>
 
   <div *ngIf="events[0] != undefined">

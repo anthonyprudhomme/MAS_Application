@@ -20,6 +20,7 @@ import { Storage } from '@ionic/storage';
 import { EventPage } from '../event/event'
 import { ProfilePage } from '../profile/profile'
 import { SchedulePage } from '../schedule/schedule'
+import { LikedEventPage } from '../liked-event/liked-event'
 import { Event } from '../../app/models/Event'
 
 @Component({
@@ -38,6 +39,7 @@ export class HomePage {
 
   eventPage = EventPage;
   schedulePage = SchedulePage;
+  likedEventPage = LikedEventPage;
 
   isDatabaseReady = false;
   areEventsLoaded = false;
@@ -53,6 +55,8 @@ export class HomePage {
     // { event: { name: 'Conference', start: "5AM", price: "free", distance: "1.2", picture_url: "assets/img/event_icon.png" } }
   ];
   fullEvents = [];
+  likedEvents = null;
+  showLikedEvents = false;
 
   constructor(
     public navCtrl: NavController,
@@ -68,6 +72,15 @@ export class HomePage {
 
   ionViewDidLoad() {
     this.platform.ready().then(() => {
+      this.storage.get("likedEvents").then(result => {
+        if (result != null) {
+          this.likedEvents = result;
+          this.showLikedEvents = true;
+
+        } else {
+          this.likedEvents = [];
+        }
+      });
       this.sqlite.create({
         name: 'data.db',
         location: 'default'
@@ -105,6 +118,7 @@ export class HomePage {
 
       this.http.get('http://52.56.35.31:8088/getData', {}, {})
         .then(data => {
+          //alert(JSON.stringify(data));
           var jsonData = JSON.parse(data.data);
           this.fillEventList(jsonData);
           this.displayEventsOnMap();
