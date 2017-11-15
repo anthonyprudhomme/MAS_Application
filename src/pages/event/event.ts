@@ -41,7 +41,7 @@ export class EventPage {
     var dayName = days[date.getDay()];
     this.event.modifiedStart = dayName + ", " + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
     this.event.stringDuration = this.getDurationString(this.event);
-    this.storage.get(this.event.facebook_id).then(result => {
+    this.storage.get(this.event.name).then(result => {
       if (result != null) {
         this.liked = result;
       } else {
@@ -66,17 +66,17 @@ export class EventPage {
     if (this.liked.indexOf("heart-outline") !== -1) {
       // if we are liking the event
       this.liked = "heart";
-      this.storage.set(this.event.facebook_id, "heart");
+      this.storage.set(this.event.name, "heart");
       this.checkUserId(this.sendPostWithId);
       this.likedEvents.push(this.event);
       this.storage.set("likedEvents", this.likedEvents);
     } else {
       // if we are disliking the event
       this.liked = "heart-outline";
-      this.storage.set(this.event.facebook_id, "heart-outline");
+      this.storage.set(this.event.name, "heart-outline");
       for (let i = 0; i < this.likedEvents.length; i++) {
         const event = this.likedEvents[i];
-        if (event.facebook_id.indexOf(this.event.facebook_id) != -1) {
+        if (event.name.indexOf(this.event.name) != -1) {
           this.likedEvents.splice(i, 1);
         }
       }
@@ -117,9 +117,9 @@ export class EventPage {
       if (event.duration_month == 0) {
         if (event.duration_day == 0) {
           if (event.duration_hour == 0) {
-            return event.duration_minute + "min";
+            return event.duration_minutes + "min";
           } else {
-            return event.duration_hour + "h" + event.duration_minute;
+            return event.duration_hour + "h" + Math.abs(event.duration_minutes);
           }
         } else {
           return event.duration_day + " days";

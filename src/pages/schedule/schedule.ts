@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { App, MenuController } from 'ionic-angular';
 
 import { DatePicker } from '@ionic-native/date-picker';
@@ -31,6 +31,7 @@ export class SchedulePage {
   searchedName = null;
 
   selectedEvent = null;
+  currentLoading = null;
   //startDate = this.days[this.now.getDay()] + " " + this.months[this.now.getMonth()] + ' ' + this.now.getDate() + ' ' + this.now.getFullYear();
   startDate = null;
   constructor(public navCtrl: NavController,
@@ -40,7 +41,8 @@ export class SchedulePage {
     private http: HTTP,
     public platform: Platform,
     private alertCtrl: AlertController,
-    private storage: Storage) {
+    private storage: Storage,
+    public loadingCtrl: LoadingController) {
   }
 
   formatDate(date) {
@@ -58,13 +60,15 @@ export class SchedulePage {
       } else {
         this.startDate = this.days[this.now.getDay()] + " " + this.months[this.now.getMonth()] + ' ' + this.now.getDate() + ' ' + this.now.getFullYear();
       }
+      this.currentLoading = this.presentLoadingDefault();
       this.http.get('http://52.56.35.31:8088/getData', {}, {})
         .then(data => {
           var jsonData = JSON.parse(data.data);
           this.fillEventList(jsonData);
-          
+          this.currentLoading.dismiss();
         })
         .catch(error => {
+          this.currentLoading.dismiss();
           // this.fillEventList(
           //   {
           //     "events": [
@@ -101,22 +105,19 @@ export class SchedulePage {
     document.getElementById("startDate").innerHTML = value;
   }
 
+  presentLoadingDefault() {
+    var loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
+
+    loading.present();
+    return loading;
+  }
+
   search() {
-    var params = {
-      "price": this.price,
-      //duration: this.duration / 4,
-      //startDate: this.startDate,
-      //startHour: this.startHour,
-      "distance": this.distance / 10,
-      //typeOfEvent: null,
-      "userPosition_lat": HomePage.userPosition.lat,
-      "userPosition_lon": HomePage.userPosition.lon,
-      "name": this.searchedName
-      // send null if that's opitionnal
-    }
-    alert(JSON.stringify(params));
+    this.currentLoading = this.presentLoadingDefault();
     this.http.get('http://52.56.35.31:8088/getFilteredData', { "price": this.price,
-    //duration: this.duration / 4,
+    duration: (this.duration / 4)*60,
     //startDate: this.startDate,
     //startHour: this.startHour,
     "distance": this.distance / 10,
@@ -125,10 +126,12 @@ export class SchedulePage {
     "userPosition_lon": HomePage.userPosition.lon,
     "name": this.searchedName }, {})
       .then(data => {
+        this.currentLoading.dismiss();
         var jsonData = JSON.parse(data.data);
         this.fillEventList(jsonData);
       })
       .catch(error => {
+        this.currentLoading.dismiss();
         // this.fillEventList({
         //   "events": [
         //     { "event": { "venue": { "id": 1, "name": "Cité musicale de Metz" }, "type_of_event": "TODO", "start": "2017-10-25T10:00:00+0200", "duration": [0, 0, 0, 2, 30], "views": [], "lang": "TODO", "end": "2017-10-27T11:30:00+0200", "price": 25, "description": "Pour les vacances de la Toussaint, le Centre Pompidou-Metz propose un stage de 3 jours pour les 8-12 ans en lien avec l'exposition d'architecture \"Japan-Ness\".\n\nL'atelier de l'artiste Vincent Broquaire propose d\u2019explorer l\u2019architecture des mus\u00e9es \u00e0 travers le b\u00e2timent du Centre Pompidou-Metz ainsi que certains \u00e9difices pr\u00e9sent\u00e9s dans Japan-Ness. M\u00e9canismes, formes organiques, personnages dans de dr\u00f4les d\u2019ascenseurs : le travail de Vincent Broquaire d\u00e9cortique l\u2019architecture et m\u00e9lange l'imaginaire, le scientifique, l'absurde et l'inattendu.\n\n\u00c0 partir de ces architectures inattendues, les enfants pourront \u00e0 leur tour imaginer l'architecture et le fonctionnement d'un mus\u00e9e, tout d\u2019abord en compl\u00e9tant les sch\u00e9mas de Vincent Broquaire, puis librement, en cr\u00e9ant un livret qu\u2019ils ram\u00e8neront \u00e0 la maison.\n\nTarif : 15\u20ac\nDur\u00e9e : 3 x 90 minutes\nMER. 25.10 + JEU. 26.10 + VEN. 27.10.17, de 10:00 \u00e0 11:30", "name": "Stage Architectomies [8-12 ans / vacances de la Toussaint]", "facebook_id": "824531944380629", "GPS": { "lat": 49.107988299011, "lon": 6.1811848399707 }, "likes": [], "address": "1 parvis des Droits de l'Homme, 57000, Metz, France", "picture_url": "https://scontent.xx.fbcdn.net/v/t31.0-0/p480x480/22424657_10159435578300123_2793622685410336547_o.jpg?oh=dcbe21fb27974339d619a8c5cac442b5&oe=5A6622D2" } },
@@ -179,7 +182,9 @@ export class SchedulePage {
 
   sortByDuration() {
     this.events.sort(function (a, b) {
-      return a.duration - b.duration;
+      var duration_a = a.duration_year*12*31*24*60 + a.duration_month*31*24*60 + a.duration_day*24*60 + a.duration_hour*60 + a.duration_minutes
+      var duration_b = b.duration_year*12*31*24*60 + b.duration_month*31*24*60 + b.duration_day*24*60 + b.duration_hour*60 + b.duration_minutes;
+      return Math.abs(duration_a) - Math.abs(duration_b);
     });
   }
 
@@ -191,7 +196,9 @@ export class SchedulePage {
 
   sortByDistance() {
     this.events.sort(function (a, b) {
-      return a.distance - b.event.distance;
+      var distance_a_user = a.GPS_lat - HomePage.userPosition.lat + a.GPS_lon - HomePage.userPosition.lon;
+      var distance_b_user = b.GPS_lat - HomePage.userPosition.lat + b.GPS_lon - HomePage.userPosition.lon;
+      return distance_b_user - distance_a_user;
     });
   }
 
